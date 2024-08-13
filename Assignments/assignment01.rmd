@@ -1,0 +1,166 @@
+---
+title: 'Assignment 1: Simple Computations in R'
+author: "Garrett Dozier"
+date: "01/27/2021"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+  
+### Introduction
+  
+In this class we will use a programming language called R. R is an open-source language and environment for statistical computing and graphics. Additionally, we will be using a third-party program called RStudio, which is an Integrated Development Environment (IDE). RStudio is a user-friendly program in which we can run R. Before completing this R tutorial, you will need to install R and RStudio on your computer: [Instructions to install R and RStudio](http://people.tamu.edu/~geoallen/courses/312/install_R_&_RStudio.pdf). If you are unable to install R or RStudio, see instruction in Assignment 0 for setting up RStudio Cloud.   
+  
+Please complete the following questions in RStudio and save your work as an **R markdown** file (file extension: .Rmd). Here is a [Quick introduction to R markdown](https://rmarkdown.rstudio.com/lesson-1.html) and a [Complete guide to R Markdown](https://bookdown.org/yihui/rmarkdown/). 
+  
+### Instructions  
+[Download the Assignment01.Rmd file](http://people.tamu.edu/~geoallen/courses/312/assignment01.Rmd) (right click on this link, select Save Link As..) and open the it in RStudio. Then complete this assignment by filling in each answer **in the R markdown document**. For full credit, show your R code within the designated R Chunks and print the answers (see example answer to first question below). Run the chunks by clicking on the "Run" button in the code editor menu. You may use the internet to help you solve these problems. Remember to save often. 
+
+### Deliverables  
+When finished, click the **Knit** button to generate an HTML document. Click the little arrow next to the knit button and select Knit to PDF to generate a PDF document. If your computer will not generate a PDF, you can Knit to Word instead. Please upload to Canvas each of the following items (submitted as seperate files, not as a single zip file):  
+
+1. A completed .Rmd file  
+2. An HTML file knitted from the completed .Rmd file  
+3. A PDF (or Word) file knitted from the completed .Rmd file.   
+  
+
+### Questions  
+  
+1.	Compute 3/5. Set result to the variable A and print A. 
+```{r}
+A = 3/5
+print(A)
+```
+\
+2.	Compute and print e^π. 
+```{r}
+computedequation = exp(pi)
+print(computedequation)
+```
+\
+3.	Make a vector C of length 10, starting with 3 and skipping every 2 integers. Print C.
+```{r}
+C = seq(from = 3, by = 2, length.out = 10)
+print(C)
+```
+\
+4.	Raise each element of C by the power of 2 and print the result. 
+```{r}
+C2= (C)^2
+print(C2)
+```
+\
+5.	Plot the square of vector C versus the index of the elements. 
+```{r}
+plot1 = plot(C2)
+print(plot1)
+```
+\
+6.	Sort vector C in reverse order and print the result. 
+```{r}
+C3 = rev(C)
+print(C3)
+```
+\
+7.	Which elements of C are greater than 10? Set result to the variable B and print B. 
+```{r}
+B = C[C>10]
+print(B)
+```
+\
+8.	Add all the elements of C together and print the result. 
+```{r}
+C4 = sum(C)
+print(C4)
+```
+\
+9.	Divide all the elements of C by the sum of C and print the result. 
+```{r}
+C5 = length(C)
+C6 = C4/C5
+print(C6)
+
+```
+\
+10.	Print a sequence of 25 numbers from −π to π. 
+```{r}
+Computedsequence = seq(from = -pi, to = pi, length.out = 25)
+print(Computedsequence)
+```
+\
+11.	Print the first difference of the vector C (difference between each vector element). 
+```{r}
+C7= diff(C, lag = 1)
+print(C7)
+
+```
+\
+12.	Print the second difference of the vector C (the difference between every second vector element).  
+```{r}
+C8= diff(C, lag = 2 )
+print(C8)
+```
+\
+13.	Get 48 random, uniformly distributed numbers, put in vector L and print L. 
+```{r}
+L = runif(48)
+print(L)
+```
+\
+14.	Calculate and print the maximum, minimum and median of L. 
+```{r}
+Lmin = min(L)
+Lmax = max(L)
+Lmean = mean(L)
+print("Minimum is,")
+print(Lmin)
+print("Maximum is,")
+print(Lmax)
+print("Mean is,")
+print(Lmean)
+```
+\
+15.	Plot a histogram of L and include the plot below. This is an empirical distribution. 
+```{r}
+Histogram = hist(L)
+print(Histogram)
+```
+\
+16.	Concatenate the 2 vectors, C and C^2, using the 'c' function. For example: c(B,L). Print the result. 
+```{r}
+C9 = c(C,C2)
+print(C9)
+```
+\
+17.	Form a 6 by 8 matrix of random numbers from vector L in question 13. Set matrix to the variable M and print M. 
+```{r}
+M = matrix(L,nrow = 6, ncol = 8  )
+print(M)
+```
+\
+18.	Select the 3rd row of M and set it equal to the variable P. Print P.
+```{r}
+P = M[3,]
+print(P)
+```
+\
+19.	Select the 5th row and set it to Q. Print Q. 
+```{r}
+Q = M[5,]
+print(Q)
+```
+\
+20.	Print the dot product of P and Q. 
+```{r}
+dotproduct = geometry::dot(P,Q)
+print(dotproduct)
+
+#Or a second way to get dot without uploading the geometry package
+dotproduct2 = P %*% Q
+print(dotproduct2)
+
+```
+\
+

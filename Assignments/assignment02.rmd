@@ -1,0 +1,194 @@
+---
+title: 'Assignment 2: Exploring and Cleaning Data in R'
+author: "Garrett Dozer"
+date: "2/08/2021"
+output:
+  html_document:
+    df_print: paged
+---
+  
+  
+### Instructions
+  
+Complete this assignment by filling in each answer in the R Markdown Notebook document. See Assignment #1 for more information about R and R Markdown. Your answers may contain code (written within code chunks) and/or writing (written outside chunks). Please do NOT print out entire tables in your report. Remember, click the **Knit** button to generate a formatted HTML (or PDF or Word) document.
+  
+Download the [Assignment02.Rmd](http://people.tamu.edu/~geoallen/courses/312/assignment02.Rmd) file (right click on this link, select Save Link As..) and open the it in RStudio. Also download [avo_raw.csv](http://people.tamu.edu/~geoallen/courses/312/avo_raw.csv) table onto your computer. Do not attempt to edit the avo_raw.csv table in a spreadsheet program like Excel, the instructor will be able to detect these edits. 
+  
+  
+#### Context
+  
+The file avo_raw.csv contains data from the Hass Avocado Board website. The data table represents weekly retail scan data for National retail volume (units) and price. Retail scan data comes directly from retailers’ cash registers based on actual retail sales of Hass avocados from 2015 to 2018. 
+  
+**Some relevant columns in the dataset:**  
+Date - The date of the observation  
+Price - the average price of a single avocado  
+Organic - flag specifying if the avocados were organic  
+Conventional - flag specifying if the avocados were not organic  
+Avocados_sold - Total number of avocados sold  
+Year - the year  
+Region - the city or region of the observation  
+  
+  
+### Deliverables  
+Please submit to Canvas the following items (separate, not as a single zip file):  
+1. An HTML (or Word or PDF) file knitted from the .Rmd file  
+2. A completed .Rmd file  
+3. The processed avo_clean.csv file  
+  
+Formatting tip: insert two spaces or a backslash to add a line break in Rmd documents. 
+  
+  
+### Questions
+\
+**Exploring and veiwing messy data**  
+\
+1.	Read the file avo_raw.csv into R and assign it to the variable "avo". Note: You need to enter in the file path of avo_raw.csv )this file has probably been downloaded into your Downloads folder). The file path needs to be entered below in quotation marks. Print the first rows (observations) of avo. Do *not* print the entire table! 
+```{r}
+fpath = "avo_raw.csv"
+avo = read.csv(file = fpath)
+avo[1,]
+
+
+
+```
+\
+2.	Print the column names of avo (the variables). 
+```{r}
+columnnames = colnames(avo)
+print(columnnames)
+```
+\
+3.	Print the number of rows and columns that the avo variable contains. 
+```{r}
+number_rows = nrow(avo)
+print(number_rows)
+number_columns = ncol(avo)
+print(number_columns)
+```
+\
+4.	Print the object class of the variable avo. 
+```{r}
+Object_class = class(avo)
+print(Object_class)
+```
+\
+5.  Print the object class of the last variable in avo.
+```{r}
+last_variable_Object_class = class(avo[18249,8])
+print(last_variable_Object_class)
+
+```
+\
+6.	Print the structure of avo.  
+```{r}
+Structure = str(avo)
+```
+\
+7. Print the summary information of each variable in avo, including the minimum, maximum, and number of NAs in the price variable. 
+```{r}
+
+#full summary
+summary(avo)
+
+
+#Or, to Upload a whole table of summary statistics use - library package "pastecs" in order to return summary statistics
+library(pastecs)
+attach(avo)
+summaryinfo<-cbind(price)
+stat.desc(summaryinfo)
+avo[1000,]
+
+
+
+
+```
+\
+**Cleaning and tidying data for analysis**
+  
+See [Hadley Wickham's article](https://vita.had.co.nz/papers/tidy-data.pdf) for more information about Tidy Data.  
+\
+8. Now time to tidy avo. Combine the two duplicative variables of "organic"  and "conventional" in avo. Create a new column called "type" that specifies whether the avocado type is either organic or conventional. Print the first few rows of the avo.
+```{r}
+ avo$type <- paste(avo$organic, sep = "-", avo$conventional)
+ avo
+org = avo$organic == TRUE 
+avo$type[org] = "Organic"
+con = avo$conventional == TRUE 
+avo$type[con] = "Conventional"
+head(avo, 3)
+
+
+
+
+
+```
+\
+9. To further tidy avo, remove any non-essential/duplicative columns from avo and set the result to the variable "avo_tidy". Print the variable names of avo_tidy. 
+```{r}
+avo_tidy <- avo[ -c(1,4:5,7) ]
+variable.names(avo_tidy)
+
+
+
+```
+\
+10. Remove all observations (entire rows) in avo_tidy that contain no data (e.g. NA, NaN, blanks) and set the resulting table to the variable "avo_noNA". Print the number of dimensions in avo_noNA. Remember to always show your R code. 
+```{r}
+avo_noNA <- avo_tidy[complete.cases(avo_tidy), ]     
+avo_noNA
+dim(avo_noNA)
+
+```
+\
+11. Convert the format of avo's date variable into R's Date format. Hint: use the as.Date() function. Print the class of the converted date variable.  
+```{r}
+avo$date <- format(as.Date(avo$date), "%Y/%m/%d")
+class(avo$date)
+```
+\
+12. Remove all observations with *obvious errors* in the price column of avo_noNA (remove entire rows that contain errors). Set the result to "avo_clean" and print the summary of the price variable in avo_clean. 
+```{r}
+# using tidyr library package
+ library(tidyr)
+avo_clean = avo_noNA %>% drop_na(price)
+badprice = which(avo_clean$price == -1.59)
+avo_clean$price[-badprice]
+summary(avo_clean)
+
+
+
+```
+\
+
+13. For each variable in avo_clean, list whether the variable contains nominal, ordinal, interval, or ratio data. If the variables contain interval or ratio data, specify if they are discrete or continuous data. Feel free to respond outside the code chunk, unless you prefer to code it.
+
+```{r}
+print(avo_clean)
+# Nominal Variable(s)-  "Region" is a nominal variable 
+# Ordinal variable(s)- "Date" is an ordinal variable, in this case date is a continuous variable
+# Interval variable(s)- "Type" is an variable and is discrete
+# Ratio Data(s)- "Price" is a ratio variable, and is discrete because price is not continuous and can fluctuate, "Avocados_sold" is a ratio variable, and is continuous as well
+# Discrete or continuous is explained within the descriptions 
+
+```
+\
+14. Write out avo_clean to the CSV file "avo_clean.csv". Don't forget to include this table in the files that you upload to Canvas.  
+```{r}
+write.csv(avo_clean, "/Users/garrettdozier/Desktop/Classes/Spring 21/GEOG312/avo_clean.csv", row.names=FALSE)
+```
+\
+15. Bonus (1 pt): Can you find any other data errors in avo_clean? If so, remove them (entire rows) and rewrite avo_clean to the CSV file "avo_clean.csv". Show your work. 
+```{r}
+unique(avo_clean$date)
+as.character(unique(avo_clean$date))
+unique(avo_clean$price)
+as.character(unique(avo_clean$price))
+unique(avo_clean$avocados_sold)
+as.character(unique(avo_clean$avocados_sold))
+unique(avo_clean$year)
+as.character(unique(avo_clean$year))
+unique(avo_clean$region)
+as.character(unique(avo_clean$region))
+unique(avo_clean$type)
+as.character(unique(avo_clean$type))
+```
